@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7月31日倒计时</title>
+  <style>
+    /* 定义根变量用于颜色和渐变 */
+    :root {
+      --primary-color: #23BCF8;
+      --secondary-color: #fff;
+      --text-color: #333;
+      --bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #cbebff 47%, #a1dbff 100%);
+    }
+
+    /* 设置所有元素的盒模型样式，去除默认边距和填充 */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* 设置页面主体样式，包括字体、文本对齐方式、背景色等 */
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: var(--text-color);
+    }
+
+    /* 设置主标题样式，包括颜色、字体大小、阴影和动画效果 */
+    h1 {
+      color: var(--primary-color);
+      font-size: clamp(2rem, 5vw, 2.5rem);
+      margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    /* 设置副标题样式，包括字体大小和颜色 */
+    .subtitle {
+      font-size: 1.1em;
+      color: var(--text-color);
+      margin-bottom: 10px;
+    }
+
+    /* 设置倒计时容器的样式，包括背景色、内边距、圆角、阴影和模糊效果 */
+    .countdown-container {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(6px);
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* 设置倒计时显示区域的样式，包括Flex布局、间距和换行 */
+    .countdown-display {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    /* 设置单个倒计时单位的样式，包括Flex布局、最小宽度和内容对齐方式 */
+    .countdown-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 80px;
+    }
+
+    /* 设置倒计时值的样式，包括字体大小、内边距、背景色、颜色、圆角、阴影和动画效果 */
+    .countdown-value {
+      font-size: 2.5em;
+      padding: 10px;
+      background: var(--primary-color);
+      color: var(--secondary-color);
+      border-radius: 10px;
+      margin-bottom: 5px;
+      box-shadow: 0 4px 15px rgba(35, 188, 248, 0.4);
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* 设置倒计时标签的样式，包括字体大小、颜色、文本转换和字间距 */
+    .countdown-label {
+      font-size: 0.85em;
+      color: var(--text-color);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* 定义倒计时值的shine动画效果 */
+    .countdown-value::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      animation: shine 3s infinite;
+    }
+
+    /* 设置秒数倒计时值的特殊动画效果 */
+    #seconds {
+      animation: pulse 1s infinite;
+    }
+
+    /* 设置庆祝信息的样式，包括默认为隐藏、固定定位、背景色、颜色和字体大小 */
+    .celebration {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(35, 188, 248, 0.95);
+      z-index: 100;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: clamp(2rem, 5vw, 3rem);
+      text-align: center;
+      padding: 20px;
+    }
+
+    /* 设置庆祝信息显示时的动画效果 */
+    .celebration.active {
+      display: flex;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    /* 定义pulse动画效果 */
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 4px 15px rgba(35, 188, 248, 0.4); }
+      50% { transform: scale(1.05); box-shadow: 0 8px 25px rgba(35, 188, 248, 0.6); }
+      100% { transform: scale(1); box-shadow: 0 4px 15px rgba(35, 188, 248, 0.4); }
+    }
+
+    /* 定义fadeIn动画效果 */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 定义shine动画效果 */
+    @keyframes shine {
+      0% { left: -100%; }
+      20% { left: 100%; }
+      100% { left: 100%; }
+    }
+
+    /* 设置媒体查询，针对屏幕宽度小于600px的情况调整样式 */
+    @media (max-width: 600px) {
+      .countdown-display {
+        gap: 15px;
+      }
+
+      .countdown-unit {
+        min-width: 70px;
+      }
+
+      .countdown-value {
+        font-size: 2em;
+        padding: 10px;
+      }
+
+      .countdown-container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>SUMMER DEAL</h1>
+
+  <div class="countdown-container">
+    <div class="countdown-display">
+      <div class="countdown-unit">
+        <span id="days" class="countdown-value">00</span>
+        <span class="countdown-label">Days</span>
+      </div>
+      <div class="countdown-unit">
+        <span id="hours" class="countdown-value">00</span>
+        <span class="countdown-label">Hours</span>
+      </div>
+      <div class="countdown-unit">
+        <span id="minutes" class="countdown-value">00</span>
+        <span class="countdown-label">Minutes</span>
+      </div>
+      <div class="countdown-unit">
+        <span id="seconds" class="countdown-value">00</span>
+        <span class="countdown-label">Seconds</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="celebration">
+    <h2>🎉 SUMMER DEAL HAS ENDED!</h2>
+    <p>Thank you for being part of our summer sale!</p>
+  </div>
+
+  <script>
+    /* 更新倒计时函数 */
+    function updateCountdown() {
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const targetDate = new Date(currentYear, 5, 27, 23, 59, 59);
+      if (now > targetDate) {
+        targetDate.setFullYear(currentYear + 1);
+      }
+      const diff = targetDate - now;
+      if (diff <= 0) {
+        document.getElementById('days').textContent = '00';
+        document.getElementById('hours').textContent = '00';
+        document.getElementById('minutes').textContent = '00';
+        document.getElementById('seconds').textContent = '00';
+        document.querySelector('.celebration').classList.add('active');
+        return;
+      }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      document.getElementById('days').textContent = String(days).padStart(2, '0');
+      document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
